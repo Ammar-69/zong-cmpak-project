@@ -1,0 +1,23 @@
+.root {
+    display: flex;
+    justify-content: end;
+    padding-block: 8px;
+    background-color: rgb(234, 234, 234);
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    margin-right: 30px;
+}
+
+.item > *:first-child {
+    margin-right: 8px;
+}
+
+.container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
