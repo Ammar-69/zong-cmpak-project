@@ -14,6 +14,8 @@ function App() {
           <Route path='add' element={<Add />} />
           <Route path='edit' element={<Edit />} />
           <Route path='h3c' element={<H3C />} />
+          <Route path='lhr' element={<H3C />} />
+          <Route path='isb' element={<H3C />} />
         </Routes>
       </BrowserRouter>
     </div>
