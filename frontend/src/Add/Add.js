@@ -61,9 +61,12 @@ function Add() {
     }
 
     try {
-      const res = await axios.post('http://localhost:5000/api/h3c/add', {
-        data: { ...body }
-      })
+      const res = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/api/h3c/add`,
+        {
+          data: { ...body }
+        }
+      )
 
       navigate('/h3c')
     } catch (error) {

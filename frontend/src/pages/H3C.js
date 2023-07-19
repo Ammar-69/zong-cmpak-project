@@ -51,9 +51,12 @@ function H3C() {
 
   const handleDelete = async id => {
     try {
-      await axios.delete('http://localhost:5000/api/h3c/delete', {
-        data: { id }
-      })
+      await axios.delete(
+        `${process.env.REACT_APP_BACKEND_URL}/api/h3c/delete`,
+        {
+          data: { id }
+        }
+      )
     } catch (error) {
       console.error('Error deleting document:', error)
     }
@@ -80,7 +83,7 @@ function H3C() {
       setLoading(false)
       setError(false)
     } else {
-      fetch('http://localhost:5000/api/h3c')
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/api/h3c`)
         .then(response => {
           return response.json()
         })

@@ -48,9 +48,12 @@ function Home() {
     }
 
     try {
-      const res = await axios.post('http://localhost:5000/api/h3c/search', {
-        data: { ...body }
-      })
+      const res = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/api/h3c/search`,
+        {
+          data: { ...body }
+        }
+      )
 
       navigate('/h3c', { state: { data: res.data.result } })
     } catch (error) {
