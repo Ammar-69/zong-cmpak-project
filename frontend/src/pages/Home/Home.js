@@ -49,7 +49,7 @@ function Home() {
 
     try {
       const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/api/h3c/search`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/search`,
         {
           data: { ...body }
         }
