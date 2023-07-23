@@ -8,6 +8,8 @@ const apiRoutes = require('./routes/apiRoutes') // For importing router from rou
 
 const app = express() // Creating a new server
 
+console.log(`Starting the server on ${process.env.PORT}`)
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => app.listen(process.env.PORT))
