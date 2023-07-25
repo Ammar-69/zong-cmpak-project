@@ -137,12 +137,14 @@ function Home() {
           H3C Cloud
         </Button>
         <Button
+          onClick={() => navigate('/lhr')}
           sx={{ flexDirection: 'column', color: 'black', fontWeight: 'bold' }}
         >
           <img src='/huawei-no-text.png' height={220} width={250} />
           Huawei LHR Cloud
         </Button>
         <Button
+          onClick={() => navigate('/isb')}
           sx={{ flexDirection: 'column', color: 'black', fontWeight: 'bold' }}
         >
           <img src='/huawei-no-text.png' height={220} width={250} />
