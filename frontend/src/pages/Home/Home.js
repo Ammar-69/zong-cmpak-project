@@ -56,6 +56,8 @@ function Home() {
       )
 
       navigate('/h3c', { state: { data: res.data.result } })
+      navigate('/lhr', { state: { data: res.data.result } })
+      navigate('/isb', { state: { data: res.data.result } })
     } catch (error) {
       console.error('Error creating document:', error)
     }
