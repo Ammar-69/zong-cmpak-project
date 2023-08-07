@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -24,10 +24,13 @@ import ListItemText from '@mui/material/ListItemText'
 import CloudIcon from '@mui/icons-material/Cloud'
 import MenuIcon from '@mui/icons-material/Menu'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { AuthContext } from '../App'
 
 const drawerWidth = 240
 
 function H3C() {
+  const { loggedIn } = useContext(AuthContext)
+
   const { state, pathname } = useLocation()
 
   const navigate = useNavigate()
@@ -39,6 +42,12 @@ function H3C() {
   const [rowsPerPage, setRowsPerPage] = useState(10)
 
   const [drawerToggle, setDrawerToggle] = useState(false)
+
+  useEffect(() => {
+    if (!loggedIn) {
+      return navigate('/login')
+    }
+  }, [])
 
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(+event.target.value)
@@ -120,146 +129,160 @@ function H3C() {
     }
   }
 
-  return (
-    <div>
-      <AppBar
-        position='fixed'
-        sx={{ zIndex: theme => theme.zIndex.drawer + 1, background: '#8fc31f' }}
-      >
-        <Toolbar>
-          <IconButton
-            size='large'
-            edge='start'
-            color='inherit'
-            aria-label='menu'
-            onClick={toggleDrawer(true)}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Box
-            component='img'
-            sx={{
-              width: 110
-            }}
-            alt='Logo'
-            src='/logo.png'
-          />
-        </Toolbar>
-      </AppBar>
-      <Drawer anchor={'left'} open={drawerToggle} onClose={toggleDrawer(false)}>
-        <Box
-          sx={{ width: 250 }}
-          role='presentation'
-          onClick={toggleDrawer(false)}
-          onKeyDown={toggleDrawer(false)}
+  if (!loggedIn) {
+    return <div />
+  } else {
+    return (
+      <div>
+        <AppBar
+          position='fixed'
+          sx={{
+            zIndex: theme => theme.zIndex.drawer + 1,
+            background: '#8fc31f'
+          }}
         >
-          <Toolbar />
-          <List>
-            {[
-              { name: 'H3C Cloud', icon: '/h3c.png' },
-              { name: 'Huawei LHR Cloud', icon: '/huawei-no-text.png' },
-              { name: 'Huawei ISB Cloud', icon: '/huawei-no-text.png' }
-            ].map((item, index) => (
-              <ListItem
-                key={item.name}
-                disablePadding
-                sx={{ background: correctPageColor(index) }}
-              >
-                <ListItemButton>
-                  <ListItemIcon>
-                    <img src={item.icon} width={50} />
-                  </ListItemIcon>
-                  <ListItemText primary={item.name} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-      </Drawer>
-      <Toolbar />
-      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-        {isLoading ? (
-          <Typography variant='h6' component='h6'>
-            Loading...
-          </Typography>
-        ) : data.length > 0 ? (
-          <>
-            <TableContainer sx={{ maxHeight: 510 }}>
-              <Table stickyHeader aria-label='sticky table'>
-                <TableHead>
-                  <TableRow>
-                    {Object.keys(data[0]).map((column, index) => {
-                      if (column != '_id')
-                        return (
-                          <TableCell key={index} sx={{ fontWeight: 'bold' }}>
-                            {column}
-                          </TableCell>
-                        )
-                    })}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {data
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) => {
-                      return (
-                        <TableRow
-                          hover
-                          role='checkbox'
-                          tabIndex={-1}
-                          key={index}
-                        >
-                          {Object.keys(data[0]).map(column => {
-                            if (column != '_id') {
-                              const value = row[column]
-                              return (
-                                <TableCell key={column} sx={{ fontSize: 12 }}>
-                                  {value}
-                                </TableCell>
-                              )
-                            }
-                          })}
-
-                          <Stack direction='row' spacing={2}>
-                            <Button
-                              sx={{ color: '#e40077' }}
-                              onClick={() => handleDelete(row['_id'])}
-                            >
-                              Delete
-                            </Button>
-                            <Button
-                              sx={{ color: '#e40077' }}
-                              onClick={() =>
-                                navigate('/edit', { state: { data: row } })
-                              }
-                            >
-                              Edit
-                            </Button>
-                          </Stack>
-                        </TableRow>
-                      )
-                    })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[10, 25, 100]}
-              component='div'
-              count={data.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
+          <Toolbar>
+            <IconButton
+              size='large'
+              edge='start'
+              color='inherit'
+              aria-label='menu'
+              onClick={toggleDrawer(true)}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Box
+              component='img'
+              sx={{
+                width: 110
+              }}
+              alt='Logo'
+              src='/logo.png'
             />
-          </>
-        ) : (
-          <Typography variant='h6' component='h6'>
-            No Result
-          </Typography>
-        )}
-      </Paper>
-    </div>
-  )
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          anchor={'left'}
+          open={drawerToggle}
+          onClose={toggleDrawer(false)}
+        >
+          <Box
+            sx={{ width: 250 }}
+            role='presentation'
+            onClick={toggleDrawer(false)}
+            onKeyDown={toggleDrawer(false)}
+          >
+            <Toolbar />
+            <List>
+              {[
+                { name: 'H3C Cloud', icon: '/h3c.png' },
+                { name: 'Huawei LHR Cloud', icon: '/huawei-no-text.png' },
+                { name: 'Huawei ISB Cloud', icon: '/huawei-no-text.png' }
+              ].map((item, index) => (
+                <ListItem
+                  key={item.name}
+                  disablePadding
+                  sx={{ background: correctPageColor(index) }}
+                >
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <img src={item.icon} width={50} />
+                    </ListItemIcon>
+                    <ListItemText primary={item.name} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+        </Drawer>
+        <Toolbar />
+        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+          {isLoading ? (
+            <Typography variant='h6' component='h6'>
+              Loading...
+            </Typography>
+          ) : data.length > 0 ? (
+            <>
+              <TableContainer sx={{ maxHeight: 510 }}>
+                <Table stickyHeader aria-label='sticky table'>
+                  <TableHead>
+                    <TableRow>
+                      {Object.keys(data[0]).map((column, index) => {
+                        if (column != '_id')
+                          return (
+                            <TableCell key={index} sx={{ fontWeight: 'bold' }}>
+                              {column}
+                            </TableCell>
+                          )
+                      })}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {data
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row, index) => {
+                        return (
+                          <TableRow
+                            hover
+                            role='checkbox'
+                            tabIndex={-1}
+                            key={index}
+                          >
+                            {Object.keys(data[0]).map(column => {
+                              if (column != '_id') {
+                                const value = row[column]
+                                return (
+                                  <TableCell key={column} sx={{ fontSize: 12 }}>
+                                    {value}
+                                  </TableCell>
+                                )
+                              }
+                            })}
+
+                            <Stack direction='row' spacing={2}>
+                              <Button
+                                sx={{ color: '#e40077' }}
+                                onClick={() => handleDelete(row['_id'])}
+                              >
+                                Delete
+                              </Button>
+                              <Button
+                                sx={{ color: '#e40077' }}
+                                onClick={() =>
+                                  navigate('/edit', { state: { data: row } })
+                                }
+                              >
+                                Edit
+                              </Button>
+                            </Stack>
+                          </TableRow>
+                        )
+                      })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[10, 25, 100]}
+                component='div'
+                count={data.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </>
+          ) : (
+            <Typography variant='h6' component='h6'>
+              No Result
+            </Typography>
+          )}
+        </Paper>
+      </div>
+    )
+  }
 }
 
 export default H3C

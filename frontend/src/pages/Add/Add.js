@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
@@ -14,10 +14,12 @@ import {
   createTheme
 } from '@mui/material'
 import axios from 'axios'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { AuthContext } from '../App'
+import { useNavigate } from 'react-router-dom'
 
-function Edit() {
+import styles from './styles.module.css'
+import { AuthContext } from '../../App'
+
+function Add() {
   const { palette } = createTheme()
   const { augmentColor } = palette
   const createColor = mainColor => augmentColor({ color: { main: mainColor } })
@@ -29,11 +31,8 @@ function Edit() {
 
   const { loggedIn } = useContext(AuthContext)
 
-  const { state } = useLocation()
-
   const navigate = useNavigate()
 
-  const [id, setId] = useState('')
   const [name, setName] = useState('')
   const [status, setStatus] = useState('')
   const [cpu, setCPU] = useState('')
@@ -53,33 +52,9 @@ function Edit() {
     }
   }, [])
 
-  useEffect(() => {
-    if (state == null) {
-      navigate('/')
-      return
-    }
-
-    const { data } = state
-
-    setId(data['_id'])
-    setName(data['Name'])
-    setStatus(data['Status'])
-    setCPU(data['CPU'])
-    setMemory(data['Memory'])
-    setOperatingSystem(data['Operating System'])
-    setIpv4(data['IPv4 Address'])
-    setCasStatus(data['CAStools Status'])
-    setCasVersion(data['CAStools Version'])
-    setDiskCapacity(data['Disk Capacity'])
-    setUsedCapacity(data['Used Capacity'])
-    setAvailableCapacity(data['Available Capacity'])
-    setUsername(data['Username'])
-  }, [])
-
   const handleSubmit = async e => {
     e.preventDefault()
     const body = {
-      _id: id,
       Name: name,
       Status: status,
       CPU: cpu,
@@ -96,7 +71,7 @@ function Edit() {
 
     try {
       const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/api/h3c/edit`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/h3c/add`,
         {
           data: { ...body }
         }
@@ -104,7 +79,7 @@ function Edit() {
 
       navigate('/h3c')
     } catch (error) {
-      console.error('Error editing document:', error)
+      console.error('Error creating document:', error)
     }
   }
 
@@ -307,7 +282,7 @@ function Edit() {
                     type='submit'
                     color='pink'
                   >
-                    Edit
+                    Add
                   </Button>
                 </ThemeProvider>
               </Grid>
@@ -319,4 +294,4 @@ function Edit() {
   }
 }
 
-export default Edit
+export default Add
