@@ -15,6 +15,7 @@ import { AuthContext } from '../../App'
 import { useNavigate } from 'react-router-dom'
 
 import styles from './styles.module.css'
+import axios from 'axios'
 
 function Login() {
   const { palette } = createTheme()
@@ -39,16 +40,25 @@ function Login() {
     }
   }, [])
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault()
 
     if (username == '' || password == '') {
       return
     }
 
-    if (username == 'admin' && password == 'admin') {
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/api/login`,
+        { username, password }
+      )
+
       setLoggedIn(true)
       return navigate('/')
+    } catch (error) {
+      if (error.response.status == 401) {
+        return alert(error.response.data.message)
+      }
     }
   }
 

@@ -1,10 +1,43 @@
 const express = require('express')
+const ldap = require('ldapjs')
 
 const router = express.Router() // creating router object
 
 const H3C = require('../models/H3C')
 const ISB = require('../models/ISB')
 const LHR = require('../models/LHR')
+
+router.post('/login', async (req, res) => {
+  const ldapServers = ['172.26.14.163', '172.26.14.162']
+
+  const { username, password } = req.body
+  let userDn = `CMPAK\\${username}`
+
+  let authenticated = false
+
+  for (let ldapServer of ldapServers) {
+    let client = ldap.createClient({
+      url: `ldap://${ldapServer}`
+    })
+
+    const promise = new Promise((resolve, reject) => {
+      client.bind(userDn, password, err => {
+        if (err) {
+          resolve(false)
+        }
+        resolve(true)
+      })
+    })
+
+    authenticated = authenticated || (await promise)
+  }
+
+  if (authenticated) {
+    return res.status(200).json({ message: 'Login Successful!' })
+  } else {
+    return res.status(401).json({ message: 'Invaliad Credentials' })
+  }
+})
 
 router.get('/h3c', (req, res) => {
   H3C.find({}).then(data => {
