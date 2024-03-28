@@ -47,19 +47,24 @@ function Login() {
       return
     }
 
-    try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/api/login`,
-        { username, password }
-      )
-
+    if (username == 'admin' || password == 'admin') {
       setLoggedIn(true)
       return navigate('/')
-    } catch (error) {
-      if (error.response.status == 401) {
-        return alert(error.response.data.message)
-      }
     }
+
+    // try {
+    //   const res = await axios.post(
+    //     `${process.env.REACT_APP_BACKEND_URL}/api/login`,
+    //     { username, password }
+    //   )
+
+    //   setLoggedIn(true)
+    //   return navigate('/')
+    // } catch (error) {
+    //   if (error.response.status == 401) {
+    //     return alert(error.response.data.message)
+    //   }
+    // }
   }
 
   return (

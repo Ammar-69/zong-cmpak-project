@@ -11,6 +11,7 @@ router.post('/login', async (req, res) => {
   const ldapServers = ['172.26.14.163', '172.26.14.162']
 
   const { username, password } = req.body
+
   let userDn = `CMPAK\\${username}`
 
   let authenticated = false
